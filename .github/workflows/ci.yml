@@ -19,8 +19,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      IMAGE_NAME: github-actions-cicd-platform
-      IMAGE_TAG: 1.0
+      IMAGE_NAME: github-actions-cicd-platform      
 
     steps:
 
@@ -39,14 +38,16 @@ jobs:
           OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
 
           docker build \
-            -t ghcr.io/${OWNER}/${IMAGE_NAME}:${IMAGE_TAG} \
+            -t ghcr.io/${OWNER}/${IMAGE_NAME}:${{ github.sha }} \
+            -t ghcr.io/${OWNER}/${IMAGE_NAME}:latest \
             -f docker/Dockerfile \
             .
 
-      - name: Push Docker Image
+      - name: Push Docker Images
         run: |
           OWNER=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
 
-          docker push \
-            ghcr.io/${OWNER}/${IMAGE_NAME}:${IMAGE_TAG}
+          docker push ghcr.io/${OWNER}/${IMAGE_NAME}:${{ github.sha }}
+
+          docker push ghcr.io/${OWNER}/${IMAGE_NAME}:latest
 
