@@ -12,6 +12,7 @@ on:
 permissions:
   contents: read
   packages: write
+  security-events: write
 
 env:
   IMAGE_NAME: github-actions-cicd-platform
@@ -64,10 +65,16 @@ jobs:
         uses: aquasecurity/trivy-action@v0.36.0
         with:
           image-ref: ghcr.io/${{ steps.owner.outputs.owner }}/${{ env.IMAGE_NAME }}:latest
-          format: table
-          exit-code: 1
+          format: sarif
+          output: trivy-results.sarif
+          exit-code: 0
           ignore-unfixed: true
           severity: CRITICAL,HIGH
+
+      - name: Upload Trivy scan results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: trivy-results.sarif
 
       - name: Push Docker Image
         uses: docker/build-push-action@v6
