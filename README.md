@@ -238,8 +238,4 @@ With that configuration, configured HIGH/CRITICAL findings can fail the scan and
 └── README.md
 ```
 
-## Interview Talking Points
 
-This project can be discussed as a small DevSecOps pipeline:
-
-> Build the container with Docker Buildx, generate deterministic image tags, scan the image with Trivy before publishing, send SARIF findings to GitHub Code Scanning, generate a CycloneDX SBOM, retain the SBOM as a workflow artifact, and publish the validated image to GHCR.
